@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
-import '../data/auth_provider.dart';
+import '../data/mock_auth_provider.dart';
 
 class SignInScreen extends ConsumerWidget {
   const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
+    final authState = ref.watch(mockAuthProvider);
 
     return Scaffold(
       backgroundColor: AppTheme.bg,
@@ -42,7 +42,7 @@ class SignInScreen extends ConsumerWidget {
                 child: ElevatedButton.icon(
                   onPressed: authState.isLoading
                       ? null
-                      : () => ref.read(authNotifierProvider.notifier).signInWithGoogle(),
+                      : () => ref.read(mockAuthProvider.notifier).signInWithGoogle(),
                   icon: authState.isLoading
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.login),
