@@ -4,5 +4,5 @@ import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: PaddleFlexApp()));
+  runApp(const ProviderScope(child: StrionApp()));
 }

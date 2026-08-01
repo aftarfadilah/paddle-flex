@@ -36,7 +36,7 @@ class ProfileScreen extends ConsumerWidget {
                         child: const Icon(Icons.person, color: Colors.black, size: 40),
                       ),
                       const SizedBox(height: 12),
-                      Text('PaddleFlex User',
+                      Text('Strion User',
                           style: Theme.of(context).textTheme.displayMedium),
                       Text('@user_${userId == "me" ? "me" : userId}',
                           style: Theme.of(context).textTheme.bodySmall),

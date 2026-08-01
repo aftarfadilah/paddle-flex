@@ -1,4 +1,4 @@
-package com.paddleflex.paddle_flex
+package com.strion.app
 
 import io.flutter.embedding.android.FlutterActivity
 

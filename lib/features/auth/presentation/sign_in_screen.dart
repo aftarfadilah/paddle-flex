@@ -28,10 +28,10 @@ class SignInScreen extends ConsumerWidget {
                 child: const Icon(Icons.sports_tennis, color: Colors.black, size: 56),
               ),
               const SizedBox(height: 32),
-              Text('PaddleFlex', style: Theme.of(context).textTheme.displayLarge),
+              Text('Strion', style: Theme.of(context).textTheme.displayLarge),
               const SizedBox(height: 12),
               Text(
-                'Track your padel sessions.\nFlex on your friends.',
+                'Track your sessions.\nClimb the ranks.',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textSecondary),
               ),

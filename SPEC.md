@@ -1,10 +1,10 @@
-# PaddleFlex — SPEC.md
+# Strion — SPEC.md
 
 ## 1. Concept & Vision
 
-**PaddleFlex** is a social fitness tracker for padel players — the intersection of a serious performance log and an Instagram-style flex machine. It scratches the itch to share your wins, see where you rank, and feel the FOMO when someone in your club just beat your streak. Think Strava meets BeReal: logging a session should feel as satisfying as posting it.
+**Strion** is a social fitness tracker for padel players — the intersection of a serious performance log and an Instagram-style flex machine. It scratches the itch to share your wins, see where you rank, and feel the FOMO when someone in your club just beat your streak. Think Strava meets BeReal: logging a session should feel as satisfying as posting it.
 
-**Tagline:** *"Every smash. Every win. Let them know."*
+**Tagline:** *"Every session. Every win. Let them know."*
 
 **Core feeling:** Competitive, addictive, slightly vain. The app rewards consistency and wins — not just participation.
 

@@ -26,7 +26,7 @@ class FeedScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: AppBar(
-        title: Text('PaddleFlex', style: Theme.of(context).textTheme.displayMedium),
+        title: Text('Strion', style: Theme.of(context).textTheme.displayMedium),
         actions: [
           IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {}),
         ],
