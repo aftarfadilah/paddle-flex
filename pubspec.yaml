@@ -42,8 +42,7 @@ dependencies:
   # Icons
   lucide_icons: ^0.257.0
 
-  # Fonts
-  google_fonts: 6.1.0
+  # Fonts via CDN (google_fonts has Dart 3.12 incompatibility)
 
   cupertino_icons: ^1.0.8
 

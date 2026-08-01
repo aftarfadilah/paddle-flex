@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const _bg = Color(0xFF0D0D0F);
@@ -24,6 +23,11 @@ class AppTheme {
   static Color get border => _border;
   static Color get textSecondary => _textSecondary;
 
+  // Base text styles using fontFamily (fonts loaded via Google Fonts CDN in index.html)
+  static TextStyle get _inter => const TextStyle(fontFamily: 'Inter', fontFamilyFallback: ['sans-serif']);
+  static TextStyle get _spaceGrotesk => const TextStyle(fontFamily: 'Space Grotesk', fontFamilyFallback: ['sans-serif']);
+  static TextStyle get _mono => const TextStyle(fontFamily: 'JetBrains Mono', fontFamilyFallback: ['monospace']);
+
   static ThemeData get dark {
     return ThemeData(
       useMaterial3: true,
@@ -39,28 +43,16 @@ class AppTheme {
         onSurface: _textPrimary,
         onError: Colors.white,
       ),
-      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
-        displayLarge: GoogleFonts.spaceGrotesk(
-          fontSize: 32, fontWeight: FontWeight.bold, color: _textPrimary,
-        ),
-        displayMedium: GoogleFonts.spaceGrotesk(
-          fontSize: 24, fontWeight: FontWeight.bold, color: _textPrimary,
-        ),
-        displaySmall: GoogleFonts.spaceGrotesk(
-          fontSize: 20, fontWeight: FontWeight.w600, color: _textPrimary,
-        ),
-        headlineMedium: GoogleFonts.spaceGrotesk(
-          fontSize: 18, fontWeight: FontWeight.w600, color: _textPrimary,
-        ),
-        titleLarge: GoogleFonts.spaceGrotesk(
-          fontSize: 16, fontWeight: FontWeight.w600, color: _textPrimary,
-        ),
-        bodyLarge: GoogleFonts.inter(color: _textPrimary, fontSize: 16),
-        bodyMedium: GoogleFonts.inter(color: _textPrimary, fontSize: 14),
-        bodySmall: GoogleFonts.inter(color: _textSecondary, fontSize: 12),
-        labelLarge: GoogleFonts.jetBrainsMono(
-          fontSize: 14, fontWeight: FontWeight.w600, color: _textPrimary,
-        ),
+      textTheme: _interTextTheme(ThemeData.dark().textTheme).copyWith(
+        displayLarge: _spaceGrotesk.copyWith(fontSize: 32, fontWeight: FontWeight.bold, color: _textPrimary),
+        displayMedium: _spaceGrotesk.copyWith(fontSize: 24, fontWeight: FontWeight.bold, color: _textPrimary),
+        displaySmall: _spaceGrotesk.copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: _textPrimary),
+        headlineMedium: _spaceGrotesk.copyWith(fontSize: 18, fontWeight: FontWeight.w600, color: _textPrimary),
+        titleLarge: _spaceGrotesk.copyWith(fontSize: 16, fontWeight: FontWeight.w600, color: _textPrimary),
+        bodyLarge: _inter.copyWith(fontSize: 16, color: _textPrimary),
+        bodyMedium: _inter.copyWith(fontSize: 14, color: _textPrimary),
+        bodySmall: _inter.copyWith(fontSize: 12, color: _textSecondary),
+        labelLarge: _mono.copyWith(fontSize: 14, fontWeight: FontWeight.w600, color: _textPrimary),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: _bg,
@@ -89,8 +81,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: _primary, width: 2),
         ),
-        hintStyle: GoogleFonts.inter(color: _textSecondary),
-        labelStyle: GoogleFonts.inter(color: _textSecondary),
+        hintStyle: _inter.copyWith(color: _textSecondary),
+        labelStyle: _inter.copyWith(color: _textSecondary),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -98,7 +90,7 @@ class AppTheme {
           foregroundColor: Colors.black,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          textStyle: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.w600, fontSize: 16),
+          textStyle: _spaceGrotesk.copyWith(fontWeight: FontWeight.w600, fontSize: 16),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -119,7 +111,7 @@ class AppTheme {
       dividerTheme: const DividerThemeData(color: _border, thickness: 1),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: _surfaceRaised,
-        contentTextStyle: GoogleFonts.inter(color: _textPrimary),
+        contentTextStyle: _inter.copyWith(color: _textPrimary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),
