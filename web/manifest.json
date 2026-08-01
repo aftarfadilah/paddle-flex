@@ -1,0 +1,9 @@
+{
+  "name": "PaddleFlex",
+  "short_name": "PaddleFlex",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0D0D0F",
+  "theme_color": "#00D4AA",
+  "description": "Track your padel sessions, dominate the leaderboard."
+}
