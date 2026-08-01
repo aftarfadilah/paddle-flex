@@ -43,7 +43,7 @@ class AppTheme {
         onSurface: _textPrimary,
         onError: Colors.white,
       ),
-      textTheme: _interTextTheme(ThemeData.dark().textTheme).copyWith(
+      textTheme: ThemeData.dark().textTheme.copyWith(
         displayLarge: _spaceGrotesk.copyWith(fontSize: 32, fontWeight: FontWeight.bold, color: _textPrimary),
         displayMedium: _spaceGrotesk.copyWith(fontSize: 24, fontWeight: FontWeight.bold, color: _textPrimary),
         displaySmall: _spaceGrotesk.copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: _textPrimary),
