@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../app.dart' as app;
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/strion_light_theme.dart';
 import '../../../core/theme/theme_provider.dart';
@@ -8,31 +9,31 @@ import '../../../core/theme/theme_provider.dart';
 // ── Convenience color getters that respond to current theme ──────────────────
 Color _bg(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.bg : LightTheme.bg;
+        ? AppColors.bg : LightColors.bg;
 Color _surface(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.surface : LightTheme.surface;
+        ? AppColors.surface : LightColors.surface;
 Color _surfaceMid(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.surfaceMid : LightTheme.surfaceMid;
+        ? AppColors.surfaceMid : LightColors.surfaceMid;
 Color _accent(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.accent : LightTheme.accent;
+        ? AppColors.accent : LightColors.accent;
 Color _textPrimary(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.textPrimary : LightTheme.textPrimary;
+        ? AppColors.textPrimary : LightColors.textPrimary;
 Color _textSecondary(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.textSecondary : LightTheme.textSecondary;
+        ? AppColors.textSecondary : LightColors.textSecondary;
 Color _border(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.border : LightTheme.border;
+        ? AppColors.border : LightColors.border;
 Color _gold(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.gold : LightTheme.gold;
+        ? AppColors.gold : LightColors.gold;
 Color _warning(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? AppColors.warning : LightTheme.warning;
+        ? AppColors.warning : LightColors.warning;
 
 // ── Mock data ────────────────────────────────────────────────────────────────
 const _mockUser = {
@@ -128,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               ),
             ),
             const SizedBox(height: 24),
-            Text('Change Avatar', style: AppFonts.title(textPrimary)),
+            Text('Change Avatar', style: AppFonts.title.copyWith(color: textPrimary)),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -169,7 +170,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
-    final themeColors = ref.watch(themeProvider);
+    final themeColors = ref.watch(app.themeProvider);
 
     return Scaffold(
       backgroundColor: _bg(context),
@@ -261,11 +262,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             Row(children: [
                               Icon(Icons.person_outline, color: _accent(context), size: 18),
                               const SizedBox(width: 6),
-                              Text('About', style: AppFonts.title(_textPrimary(context))),
+                              Text('About', style: AppFonts.title.copyWith(color: _textPrimary(context))),
                             ]),
                             const SizedBox(height: 10),
                             Text(_mockUser['bio'] as String,
-                                style: AppFonts.body(_textSecondary(context))),
+                                style: AppFonts.body.copyWith(color: _textSecondary(context))),
                           ],
                         )),
 
@@ -278,9 +279,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(children: [
-                                Text('Achievements', style: AppFonts.headline(_textPrimary(context))),
+                                Text('Achievements', style: AppFonts.headline.copyWith(color: _textPrimary(context))),
                                 const Spacer(),
-                                Text('2/4', style: AppFonts.mono(_textSecondary(context))),
+                                Text('2/4', style: AppFonts.mono.copyWith(color: _textSecondary(context))),
                               ]),
                               const SizedBox(height: 14),
                               _AchievementRow(badgeCtrl: _badgeCtrl),
@@ -297,13 +298,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(children: [
-                                Text('Recent Sessions', style: AppFonts.headline(_textPrimary(context))),
+                                Text('Recent Sessions', style: AppFonts.headline.copyWith(color: _textPrimary(context))),
                                 const Spacer(),
                                 if (widget.userId == 'me')
                                   TextButton.icon(
                                     onPressed: () {},
                                     icon: Icon(Icons.add, color: _accent(context), size: 16),
-                                    label: Text('Log', style: AppFonts.body(_accent(context))),
+                                    label: Text('Log', style: AppFonts.body.copyWith(color: _accent(context))),
                                   ),
                               ]),
                               const SizedBox(height: 12),
@@ -365,7 +366,7 @@ class _HeroHeader extends StatelessWidget {
         gradient: LinearGradient(
           colors: Theme.of(context).brightness == Brightness.dark
               ? [const Color(0xFF1a1a2e), const Color(0xFF16213e)]
-              : [LightTheme.surfaceMid, LightTheme.bg],
+              : [LightColors.surfaceMid, LightColors.bg],
           begin: Alignment.topLeft, end: Alignment.bottomRight,
         ),
       ),
@@ -410,9 +411,9 @@ class _HeroHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(userName, style: AppFonts.display(_textPrimary(context)).copyWith(fontSize: 24)),
+            Text(userName, style: AppFonts.display.copyWith(color: _textPrimary(context)).copyWith(fontSize: 24)),
             const SizedBox(height: 4),
-            Text(userHandle, style: AppFonts.bodySmall(_textSecondary(context))),
+            Text(userHandle, style: AppFonts.bodySmall.copyWith(color: _textSecondary(context))),
           ],
         ),
       ),
@@ -494,13 +495,13 @@ class _StatItem extends StatelessWidget {
                     curve: Curves.easeOutCubic,
                     builder: (_, double v, __) => Text(
                       '${v.round()}$suffix',
-                      style: AppFonts.mono(accent).copyWith(
+                      style: AppFonts.mono.copyWith(color: accent).copyWith(
                         fontSize: 17, fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(label, style: AppFonts.bodySmall(textSecondary), textAlign: TextAlign.center),
+                  Text(label, style: AppFonts.bodySmall.copyWith(color: textSecondary), textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -631,7 +632,7 @@ class _AchievementRow extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(a.label, style: AppFonts.bodySmall(textSecondary)),
+                    Text(a.label, style: AppFonts.bodySmall.copyWith(color: textSecondary)),
                   ],
                 ),
               ),
@@ -683,17 +684,17 @@ class _RecentSessionsList extends StatelessWidget {
                     ),
                     child: Text(
                       s['result'] as String,
-                      style: AppFonts.mono(s['color'] as Color).copyWith(fontSize: 11),
+                      style: AppFonts.mono.copyWith(color: s['color'] as Color).copyWith(fontSize: 11),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       s['date'] as String,
-                      style: AppFonts.body(textPrimary),
+                      style: AppFonts.body.copyWith(color: textPrimary),
                     ),
                   ),
-                  Text(s['score'] as String, style: AppFonts.mono(textSecondary)),
+                  Text(s['score'] as String, style: AppFonts.mono.copyWith(color: textSecondary)),
                 ]),
               ),
               if (!isLast)
@@ -734,7 +735,7 @@ class _QuickActionBtn extends StatelessWidget {
           children: [
             Icon(icon, color: accent, size: 18),
             const SizedBox(width: 6),
-            Text(label, style: AppFonts.body(textPrimary)),
+            Text(label, style: AppFonts.body.copyWith(color: textPrimary)),
           ],
         ),
       ),
