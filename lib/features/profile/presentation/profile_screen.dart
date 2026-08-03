@@ -1,41 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../app.dart' as app;
-import '../../../core/theme/app_theme.dart';
-import '../../../core/theme/strion_light_theme.dart';
 import '../../../core/theme/theme_provider.dart';
 
-// ── Convenience color getters that respond to current theme ──────────────────
-Color _bg(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.bg : LightColors.bg;
-Color _surface(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.surface : LightColors.surface;
-Color _surfaceMid(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.surfaceMid : LightColors.surfaceMid;
-Color _accent(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.accent : LightColors.accent;
-Color _textPrimary(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.textPrimary : LightColors.textPrimary;
-Color _textSecondary(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.textSecondary : LightColors.textSecondary;
-Color _border(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.border : LightColors.border;
-Color _gold(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.gold : LightColors.gold;
-Color _warning(BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? AppColors.warning : LightColors.warning;
-
-// ── Mock data ────────────────────────────────────────────────────────────────
 const _mockUser = {
   'name': 'Aftar Fadilah',
   'username': '@aftarfdh',
@@ -46,7 +12,6 @@ const _mockUser = {
   'bio': 'Game dev in progress. Every session counts. 🌙',
 };
 
-// ── Main Profile Screen ──────────────────────────────────────────────────────
 class ProfileScreen extends ConsumerStatefulWidget {
   final String userId;
   const ProfileScreen({super.key, required this.userId});
@@ -107,14 +72,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   void _showAvatarPicker(BuildContext context) {
-    final surface = _surface(context);
-    final border = _border(context);
-    final textPrimary = _textPrimary(context);
-    final accent = _accent(context);
+    final theme = Theme.of(context);
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: surface,
+      backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -125,11 +87,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           children: [
             Container(width: 40, height: 4,
               decoration: BoxDecoration(
-                color: border, borderRadius: BorderRadius.circular(2),
+                color: theme.colorScheme.outline, borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(height: 24),
-            Text('Change Avatar', style: AppFonts.title.copyWith(color: textPrimary)),
+            Text('Change Avatar', style: theme.textTheme.titleMedium),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -137,7 +99,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 6,
                 (i) {
                   final colors = [
-                    AppColors.accent, const Color(0xFFFF6B6B),
+                    theme.colorScheme.primary, const Color(0xFFFF6B6B),
                     const Color(0xFFFFBE0B), const Color(0xFF00B39A),
                     const Color(0xFF6C63FF), const Color(0xFFFF6B9D),
                   ];
@@ -146,8 +108,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                     child: Container(
                       width: 48, height: 48,
                       decoration: BoxDecoration(
-                        color: surface, shape: BoxShape.circle,
-                        border: Border.all(color: border),
+                        color: theme.colorScheme.surface, shape: BoxShape.circle,
+                        border: Border.all(color: theme.colorScheme.outline),
                       ),
                       child: Container(
                         margin: const EdgeInsets.all(3),
@@ -170,14 +132,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
-    final themeColors = ref.watch(app.themeProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: _bg(context),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: RefreshIndicator(
         onRefresh: () async => Future.delayed(const Duration(milliseconds: 800)),
-        color: _accent(context),
-        backgroundColor: _surface(context),
+        color: theme.colorScheme.primary,
+        backgroundColor: theme.colorScheme.surface,
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
@@ -187,12 +149,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             SliverAppBar(
               expandedHeight: 300,
               pinned: true,
-              backgroundColor: _bg(context),
+              backgroundColor: theme.scaffoldBackgroundColor,
               elevation: 0,
               leading: FadeTransition(
                 opacity: _headerFade,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios, color: _textPrimary(context)),
+                  icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.onSurface),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),
@@ -201,17 +163,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   opacity: _headerFade,
                   child: IconButton(
                     icon: Icon(
-                      themeColors.isDark ? Icons.light_mode : Icons.dark_mode,
-                      color: _textPrimary(context),
+                      theme.brightness == Brightness.dark ? Icons.light_mode : Icons.dark_mode,
+                      color: theme.colorScheme.onSurface,
                     ),
-                    onPressed: () => themeColors.toggleTheme(),
+                    onPressed: () => ref.read(app.themeProvider.notifier).toggleTheme(),
                   ),
                 ),
                 if (widget.userId == 'me')
                   FadeTransition(
                     opacity: _headerFade,
                     child: IconButton(
-                      icon: Icon(Icons.settings_outlined, color: _textPrimary(context)),
+                      icon: Icon(Icons.settings_outlined, color: theme.colorScheme.onSurface),
                       onPressed: () {},
                     ),
                   ),
@@ -260,13 +222,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(children: [
-                              Icon(Icons.person_outline, color: _accent(context), size: 18),
+                              Icon(Icons.person_outline, color: theme.colorScheme.primary, size: 18),
                               const SizedBox(width: 6),
-                              Text('About', style: AppFonts.title.copyWith(color: _textPrimary(context))),
+                              Text('About', style: theme.textTheme.titleMedium),
                             ]),
                             const SizedBox(height: 10),
                             Text(_mockUser['bio'] as String,
-                                style: AppFonts.body.copyWith(color: _textSecondary(context))),
+                                style: theme.textTheme.bodyMedium),
                           ],
                         )),
 
@@ -279,9 +241,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(children: [
-                                Text('Achievements', style: AppFonts.headline.copyWith(color: _textPrimary(context))),
+                                Text('Achievements', style: theme.textTheme.titleLarge),
                                 const Spacer(),
-                                Text('2/4', style: AppFonts.mono.copyWith(color: _textSecondary(context))),
+                                Text('2/4', style: theme.textTheme.labelMedium),
                               ]),
                               const SizedBox(height: 14),
                               _AchievementRow(badgeCtrl: _badgeCtrl),
@@ -298,13 +260,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(children: [
-                                Text('Recent Sessions', style: AppFonts.headline.copyWith(color: _textPrimary(context))),
+                                Text('Recent Sessions', style: theme.textTheme.titleLarge),
                                 const Spacer(),
                                 if (widget.userId == 'me')
                                   TextButton.icon(
                                     onPressed: () {},
-                                    icon: Icon(Icons.add, color: _accent(context), size: 16),
-                                    label: Text('Log', style: AppFonts.body.copyWith(color: _accent(context))),
+                                    icon: Icon(Icons.add, color: theme.colorScheme.primary, size: 16),
+                                    label: Text('Log', style: theme.textTheme.bodyMedium),
                                   ),
                               ]),
                               const SizedBox(height: 12),
@@ -358,15 +320,16 @@ class _HeroHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = _accent(context);
-    final bgColor = _bg(context);
+    final theme = Theme.of(context);
+    final accent = theme.colorScheme.primary;
+    final bgColor = theme.scaffoldBackgroundColor;
 
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: Theme.of(context).brightness == Brightness.dark
+          colors: theme.brightness == Brightness.dark
               ? [const Color(0xFF1a1a2e), const Color(0xFF16213e)]
-              : [LightColors.surfaceMid, LightColors.bg],
+              : [theme.colorScheme.surfaceContainerHighest, theme.scaffoldBackgroundColor],
           begin: Alignment.topLeft, end: Alignment.bottomRight,
         ),
       ),
@@ -411,9 +374,9 @@ class _HeroHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Text(userName, style: AppFonts.display.copyWith(color: _textPrimary(context)).copyWith(fontSize: 24)),
+            Text(userName, style: theme.textTheme.headlineMedium?.copyWith(fontSize: 24)),
             const SizedBox(height: 4),
-            Text(userHandle, style: AppFonts.bodySmall.copyWith(color: _textSecondary(context))),
+            Text(userHandle, style: theme.textTheme.bodySmall),
           ],
         ),
       ),
@@ -462,11 +425,7 @@ class _StatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = _accent(context);
-    final surface = _surface(context);
-    final border = _border(context);
-    final textPrimary = _textPrimary(context);
-    final textSecondary = _textSecondary(context);
+    final theme = Theme.of(context);
 
     return AnimatedBuilder(
       animation: ctrl,
@@ -483,9 +442,9 @@ class _StatItem extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 3),
               padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
               decoration: BoxDecoration(
-                color: surface,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: border),
+                border: Border.all(color: theme.colorScheme.outline),
               ),
               child: Column(
                 children: [
@@ -495,13 +454,14 @@ class _StatItem extends StatelessWidget {
                     curve: Curves.easeOutCubic,
                     builder: (_, double v, __) => Text(
                       '${v.round()}$suffix',
-                      style: AppFonts.mono.copyWith(color: accent).copyWith(
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.primary,
                         fontSize: 17, fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(label, style: AppFonts.bodySmall.copyWith(color: textSecondary), textAlign: TextAlign.center),
+                  Text(label, style: theme.textTheme.bodySmall, textAlign: TextAlign.center),
                 ],
               ),
             ),
@@ -528,8 +488,7 @@ class _ContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surface = _surface(context);
-    final border = _border(context);
+    final theme = Theme.of(context);
 
     final delay = index * 0.08;
 
@@ -547,9 +506,9 @@ class _ContentCard extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: surface,
+                color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: border),
+                border: Border.all(color: theme.colorScheme.outline),
               ),
               child: child,
             ),
@@ -578,11 +537,14 @@ class _AchievementRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gold = const Color(0xFFD4AF37);
+
     final achievements = [
-      _Achievement(icon: Icons.emoji_events, label: 'First Log', unlocked: true, color: _gold(context)),
+      _Achievement(icon: Icons.emoji_events, label: 'First Log', unlocked: true, color: gold),
       _Achievement(icon: Icons.local_fire_department, label: 'On Fire', unlocked: true, color: Colors.orange),
-      _Achievement(icon: Icons.star, label: 'Century', unlocked: false, color: _accent(context)),
-      _Achievement(icon: Icons.military_tech, label: 'Champion', unlocked: false, color: _gold(context)),
+      _Achievement(icon: Icons.star, label: 'Century', unlocked: false, color: theme.colorScheme.primary),
+      _Achievement(icon: Icons.military_tech, label: 'Champion', unlocked: false, color: gold),
     ];
 
     return Row(
@@ -598,10 +560,6 @@ class _AchievementRow extends StatelessWidget {
             final raw = ((badgeCtrl.value - delay) / (1.0 - delay * 4)).clamp(0.0, 1.0);
             final eased = Curves.elasticOut.transform(raw).clamp(0.0, 1.0);
 
-            final surface = _surface(context);
-            final border = _border(context);
-            final textSecondary = _textSecondary(context);
-
             return Opacity(
               opacity: raw.clamp(0.0, 1.0),
               child: Transform.scale(
@@ -613,12 +571,12 @@ class _AchievementRow extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: a.unlocked
                             ? a.color.withValues(alpha: 0.15)
-                            : surface,
+                            : theme.colorScheme.surface,
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
                           color: a.unlocked
                               ? a.color.withValues(alpha: 0.4)
-                              : border,
+                              : theme.colorScheme.outline,
                           width: 1.25,
                         ),
                         boxShadow: a.unlocked
@@ -627,12 +585,12 @@ class _AchievementRow extends StatelessWidget {
                       ),
                       child: Icon(
                         a.unlocked ? a.icon : Icons.lock,
-                        color: a.unlocked ? a.color : textSecondary,
+                        color: a.unlocked ? a.color : theme.colorScheme.onSurfaceVariant,
                         size: 26,
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(a.label, style: AppFonts.bodySmall.copyWith(color: textSecondary)),
+                    Text(a.label, style: theme.textTheme.bodySmall),
                   ],
                 ),
               ),
@@ -648,22 +606,19 @@ class _AchievementRow extends StatelessWidget {
 class _RecentSessionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final sessions = [
-      {'date': 'Today', 'result': 'WIN', 'score': '21-14', 'color': _accent(context)},
-      {'date': 'Yesterday', 'result': 'LOSS', 'score': '18-21', 'color': Colors.red.shade400},
-      {'date': 'Jul 30', 'result': 'WIN', 'score': '21-12', 'color': _accent(context)},
-    ];
+    final theme = Theme.of(context);
 
-    final surface = _surface(context);
-    final border = _border(context);
-    final textSecondary = _textSecondary(context);
-    final textPrimary = _textPrimary(context);
+    final sessions = [
+      {'date': 'Today', 'result': 'WIN', 'score': '21-14', 'color': theme.colorScheme.primary},
+      {'date': 'Yesterday', 'result': 'LOSS', 'score': '18-21', 'color': Colors.red.shade400},
+      {'date': 'Jul 30', 'result': 'WIN', 'score': '21-12', 'color': theme.colorScheme.primary},
+    ];
 
     return Container(
       decoration: BoxDecoration(
-        color: surface,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: border),
+        border: Border.all(color: theme.colorScheme.outline),
       ),
       child: Column(
         children: sessions.asMap().entries.map((entry) {
@@ -684,21 +639,21 @@ class _RecentSessionsList extends StatelessWidget {
                     ),
                     child: Text(
                       s['result'] as String,
-                      style: AppFonts.mono.copyWith(color: s['color'] as Color).copyWith(fontSize: 11),
+                      style: theme.textTheme.labelMedium?.copyWith(color: s['color'] as Color, fontSize: 11),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       s['date'] as String,
-                      style: AppFonts.body.copyWith(color: textPrimary),
+                      style: theme.textTheme.bodyMedium,
                     ),
                   ),
-                  Text(s['score'] as String, style: AppFonts.mono.copyWith(color: textSecondary)),
+                  Text(s['score'] as String, style: theme.textTheme.labelMedium),
                 ]),
               ),
               if (!isLast)
-                Divider(height: 1, color: border, indent: 14, endIndent: 14),
+                Divider(height: 1, color: theme.colorScheme.outline, indent: 14, endIndent: 14),
             ],
           );
         }).toList(),
@@ -716,26 +671,23 @@ class _QuickActionBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surface = _surface(context);
-    final border = _border(context);
-    final accent = _accent(context);
-    final textPrimary = _textPrimary(context);
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: surface,
+          color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: border),
+          border: Border.all(color: theme.colorScheme.outline),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: accent, size: 18),
+            Icon(icon, color: theme.colorScheme.primary, size: 18),
             const SizedBox(width: 6),
-            Text(label, style: AppFonts.body.copyWith(color: textPrimary)),
+            Text(label, style: theme.textTheme.bodyMedium),
           ],
         ),
       ),
