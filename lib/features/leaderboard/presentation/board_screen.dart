@@ -241,7 +241,7 @@ class _PodiumPlace extends StatelessWidget {
             children: [
               Icon(_medalIcon, color: medalColor, size: 28),
               const SizedBox(height: 4),
-              Text('#\${entry.rank}', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              Text('#${entry.rank}', style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: medalColor, fontSize: 12, fontWeight: FontWeight.w700)),
             ],
           ),
@@ -323,7 +323,7 @@ class _PlayerRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 28,
-            child: Text('#\${entry.rank}',
+            child: Text('#${entry.rank}',
               style: Theme.of(context).textTheme.labelMedium?.copyWith(fontSize: 12, color: rankColor, fontWeight: FontWeight.w700)),
           ),
           const SizedBox(width: 12),
