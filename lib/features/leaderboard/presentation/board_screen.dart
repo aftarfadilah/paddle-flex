@@ -75,7 +75,7 @@ class _BoardScreenState extends ConsumerState<BoardScreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: lbAsync.when(
         loading: () => const _BoardShimmer(),
-        error: (e, st) => Center(child: Text('Error: \$e', style: Theme.of(context).textTheme.bodyMedium)),
+        error: (e, st) => Center(child: Text('Error: $e', style: Theme.of(context).textTheme.bodyMedium)),
         data: (data) => NestedScrollView(
           physics: const BouncingScrollPhysics(),
           headerSliverBuilder: (_, __) => [
@@ -221,7 +221,7 @@ class _PodiumPlace extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(entry.name.split(' ').first, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 12)),
-        Text('\${entry.score}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+        Text('${entry.score}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
           color: medalColor, fontSize: 14, fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
         // Podium block
@@ -354,9 +354,9 @@ class _PlayerRow extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('\${entry.score}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              Text('${entry.score}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: entry.rank <= 3 ? rankColor : Theme.of(context).colorScheme.onSurface, fontSize: 14)),
-              Text('\${entry.sessions}s', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10)),
+              Text('${entry.sessions}s', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10)),
             ],
           ),
         ],
@@ -397,11 +397,11 @@ class _ExerciseList extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(entries[i].name, style: Theme.of(context).textTheme.titleMedium),
-                    Text('\${entries[i].sessions} sessions', style: Theme.of(context).textTheme.bodySmall),
+                    Text('${entries[i].sessions} sessions', style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ),
-              Text('\${entries[i].best}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              Text('${entries[i].best}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
                 color: Theme.of(context).colorScheme.primary, fontSize: 16, fontWeight: FontWeight.w700)),
             ],
           ),
