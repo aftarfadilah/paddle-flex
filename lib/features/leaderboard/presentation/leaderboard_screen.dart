@@ -14,17 +14,17 @@ final _leaderboardProvider = FutureProvider<_LeaderboardData>((ref) async {
       _Player('Siti Aminah', 'Jakarta Padel Club', 29, 78.3, 78.3),
       _Player('Andi Wijaya', 'Bandung Breakers', 25, 74.1, 74.1),
       _Player('Dewi Lestari', 'Surabaya Smashers', 22, 71.8, 71.8),
-      _Player('Reza Pratama', 'Jakarta Padel Club', 19, 68.5, 68.5),
-      _Player('Nia Rahayu', 'Bali Padel', 16, 65.2, 65.2),
+      _Player('Reza Pratama', 'Jajarta Padel Club', 19, 68.5, 68.5),
+      _Player('Nia Rahayu', 'Bali Padel', 16, 65.2, 65.2)
     ],
-    exerciseLeaderboards: _exerciseLeaderboards,
+    exerciseLeaderboards: _exerciseLeaderboards
   );
 });
 
 final _exerciseLeaderboards = [
   _ExerciseBoard('Bench Press', [
     _ExerciseEntry('Rafa Nadal Jr', 92.5),
-    _ExerciseEntry('Ivana Wawrinka', 87.5),
+    _ExerciseEntry('Ivana Wawrink', 87.5),
     _ExerciseEntry('Budi Djiwandono', 82.0),
     _ExerciseEntry('Siti Aminah', 77.5),
     _ExerciseEntry('Andi Wijaya', 75.0),
@@ -114,7 +114,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
   Widget build(BuildContext context) {
     final lbAsync = ref.watch(_leaderboardProvider);
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Board'),
         actions: [
@@ -122,9 +122,9 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: AppColors.primary,
-          labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textSecondary,
+          indicatorColor: Theme.of(context).colorScheme.primary,
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
           tabs: const [
             Tab(text: 'Overall'),
             Tab(text: 'Exercises'),
@@ -161,11 +161,9 @@ class _OverallBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        // Podium
         SliverToBoxAdapter(
           child: _PodiumRow(top3: top3),
         ),
-        // Rest of list
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, i) {
@@ -193,6 +191,10 @@ class _PodiumRow extends StatelessWidget {
   final List<_Player> top3;
   const _PodiumRow({required this.top3});
 
+  static const Color _gold = Color(0xFFD4AF37);
+  static const Color _silver = Color(0xFFC0C0C0);
+  static const Color _bronze = Color(0xFFCD7F32);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -200,33 +202,30 @@ class _PodiumRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          // 2nd place
           Expanded(
             child: _PodiumCard(
               rank: 2,
               player: top3[1],
               height: 100,
-              color: AppColors.silver,
+              color: _silver,
             ),
           ),
           const SizedBox(width: 8),
-          // 1st place
           Expanded(
             child: _PodiumCard(
               rank: 1,
               player: top3[0],
               height: 130,
-              color: AppColors.gold,
+              color: _gold,
             ),
           ),
           const SizedBox(width: 8),
-          // 3rd place
           Expanded(
             child: _PodiumCard(
               rank: 3,
               player: top3[2],
               height: 80,
-              color: AppColors.bronze,
+              color: _bronze,
             ),
           ),
         ],
@@ -249,7 +248,6 @@ class _PodiumCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Avatar
         Container(
           width: 48, height: 48,
           decoration: BoxDecoration(
@@ -261,7 +259,7 @@ class _PodiumCard extends StatelessWidget {
             child: Text(
               player.name[0],
               style: TextStyle(
-                color: rank == 1 ? Colors.black : Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.bold, fontSize: 20,
               ),
             ),
@@ -271,7 +269,6 @@ class _PodiumCard extends StatelessWidget {
         Text(player.name, style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
         Text('${player.winRate.toStringAsFixed(0)}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color)),
         const SizedBox(height: 8),
-        // Podium block
         Container(
           height: height,
           decoration: BoxDecoration(
@@ -321,7 +318,7 @@ class _PlayerTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       padding: const EdgeInsets.all(14),
       decoration: AppTheme.glassCard(
-        color: isHighlighted ? AppColors.surfaceRaised : null,
+        color: isHighlighted ? Theme.of(context).colorScheme.surfaceContainerHighest : null,
       ),
       child: Row(
         children: [
@@ -330,7 +327,7 @@ class _PlayerTile extends StatelessWidget {
             child: Text(
               '#$rank',
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           ),
@@ -338,11 +335,11 @@ class _PlayerTile extends StatelessWidget {
             width: 40, height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.surfaceRaised,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
             child: Center(
-              child: Text(name[0], style: const TextStyle(
-                color: AppColors.primary, fontWeight: FontWeight.bold,
+              child: Text(name[0], style: TextStyle(
+                color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold,
               )),
             ),
           ),
@@ -361,7 +358,7 @@ class _PlayerTile extends StatelessWidget {
             children: [
               Text(
                 '${winRate.toStringAsFixed(0)}%',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.primary),
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
               Text('$sessions sessions', style: Theme.of(context).textTheme.bodySmall),
             ],
@@ -393,7 +390,7 @@ class _ExerciseBoards extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
                 child: Row(
                   children: [
-                    const Icon(Icons.fitness_center, color: AppColors.primary, size: 18),
+                    Icon(Icons.fitness_center, color: Theme.of(context).colorScheme.primary, size: 18),
                     const SizedBox(width: 8),
                     Text(board.name, style: Theme.of(context).textTheme.titleMedium),
                   ],
@@ -419,13 +416,17 @@ class _ExerciseRow extends StatelessWidget {
   final bool isTop3;
   const _ExerciseRow({required this.rank, required this.entry, required this.isTop3});
 
+  static const Color _gold = Color(0xFFD4AF37);
+  static const Color _silver = Color(0xFFC0C0C0);
+  static const Color _bronze = Color(0xFFCD7F32);
+
   @override
   Widget build(BuildContext context) {
     Color rankColor;
-    if (rank == 1) rankColor = AppColors.gold;
-    else if (rank == 2) rankColor = AppColors.silver;
-    else if (rank == 3) rankColor = AppColors.bronze;
-    else rankColor = AppColors.textSecondary;
+    if (rank == 1) rankColor = _gold;
+    else if (rank == 2) rankColor = _silver;
+    else if (rank == 3) rankColor = _bronze;
+    else rankColor = Theme.of(context).colorScheme.onSurfaceVariant;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -447,7 +448,7 @@ class _ExerciseRow extends StatelessWidget {
           Text(
             '${entry.weight.toStringAsFixed(1)} kg',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: isTop3 ? rankColor : AppColors.textPrimary,
+              color: isTop3 ? rankColor : Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],
@@ -482,10 +483,10 @@ class _ClubsBoard extends StatelessWidget {
               Container(
                 width: 40, height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.groups, color: AppColors.primary, size: 20),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.15)
+                  
+                  ),
+                child: Icon(Icons.groups, color: Theme.of(context).colorScheme.primary, size: 20),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -502,7 +503,7 @@ class _ClubsBoard extends StatelessWidget {
                 children: [
                   Text(
                     '${club.$3.toStringAsFixed(1)}%',
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: AppColors.primary),
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
                   Text('avg flex', style: Theme.of(context).textTheme.bodySmall),
                 ],
@@ -523,11 +524,11 @@ class _ShimmerBoard extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Container(height: 130, decoration: BoxDecoration(color: AppColors.surfaceRaised, borderRadius: BorderRadius.circular(16))),
+        Container(height: 130, decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(16))),
         const SizedBox(height: 16),
         ...List.generate(5, (_) => Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Container(height: 72, decoration: BoxDecoration(color: AppColors.surfaceRaised, borderRadius: BorderRadius.circular(16))),
+          child: Container(height: 72, decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(16))),
         )),
       ],
     );
