@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/app_theme.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -22,8 +21,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -40,11 +42,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               child: Container(
                 width: 80, height: 80,
                 decoration: BoxDecoration(
-                  gradient: AppColors.accentGradient,
+                  gradient: LinearGradient(colors: [colorScheme.primary, colorScheme.primary]),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.accent.withValues(alpha: 0.35),
+                      color: colorScheme.primary.withValues(alpha: 0.35),
                       blurRadius: 24,
                       offset: const Offset(0, 8),
                     ),
@@ -56,7 +58,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             const SizedBox(height: 24),
             Text(
               'Strion',
-              style: AppFonts.display.copyWith(
+              style: textTheme.headlineMedium?.copyWith(
                 fontSize: 32,
                 letterSpacing: -1,
               ),
@@ -64,8 +66,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             const SizedBox(height: 8),
             Text(
               'Every session. Every win. Let them know.',
-              style: AppFonts.body.copyWith(
-                color: AppColors.textSecondary,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
                 fontSize: 14,
               ),
             ),
@@ -74,8 +76,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             SizedBox(
               width: 120,
               child: LinearProgressIndicator(
-                backgroundColor: AppColors.surfaceMid,
-                color: AppColors.accent,
+                backgroundColor: colorScheme.surfaceContainerHighest,
+                color: colorScheme.primary,
                 borderRadius: BorderRadius.circular(4),
                 minHeight: 3,
               ),
