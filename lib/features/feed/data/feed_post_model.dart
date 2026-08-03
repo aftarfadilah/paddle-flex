@@ -10,6 +10,7 @@ class FeedPost {
   final Session? session;
   final bool isLiked;
   final int flexFactor;
+  final int exerciseCount;
 
   FeedPost({
     required this.id,
@@ -20,5 +21,6 @@ class FeedPost {
     this.session,
     this.isLiked = false,
     this.flexFactor = 50,
+    this.exerciseCount = 0,
   });
 }
