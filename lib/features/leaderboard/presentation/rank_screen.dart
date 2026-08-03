@@ -45,11 +45,12 @@ class RankScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statsAsync = ref.watch(_rankStatsProvider);
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: statsAsync.when(
         loading: () => const _RankShimmer(),
-        error: (e, st) => Center(child: Text('Error: $e', style: AppFonts.body)),
+        error: (e, st) => Center(child: Text('Error: $e', style: theme.textTheme.bodyMedium)),
         data: (stats) => SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
@@ -58,9 +59,9 @@ class RankScreen extends ConsumerWidget {
             children: [
               const SizedBox(height: 60),
               // Header
-              Text('Your Rank', style: AppFonts.display.copyWith(fontSize: 28)),
+              Text('Your Rank', style: theme.textTheme.headlineMedium?.copyWith(fontSize: 28)),
               const SizedBox(height: 4),
-              Text('Personal performance', style: AppFonts.bodySmall),
+              Text('Personal performance', style: theme.textTheme.bodySmall),
               const SizedBox(height: 24),
               // Streak + Rank banner
               StaggeredItem(
@@ -140,6 +141,8 @@ class _PremiumStreakBannerState extends State<_PremiumStreakBanner>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final goldColor = const Color(0xFFD4AF37);
     return FadeTransition(
       opacity: _fade,
       child: SizeTransition(
@@ -170,19 +173,19 @@ class _PremiumStreakBannerState extends State<_PremiumStreakBanner>
                           children: [
                             AnimatedCounter(
                               value: widget.streak,
-                              style: AppFonts.display.copyWith(fontSize: 24),
+                              style: theme.textTheme.headlineMedium?.copyWith(fontSize: 24),
                               suffix: 'd',
                             ),
-                            Text(' streak', style: AppFonts.body),
+                            Text(' streak', style: theme.textTheme.bodyMedium),
                           ],
                         ),
-                        Text('Longest: ${widget.longestStreak} days', style: AppFonts.bodySmall),
+                        Text('Longest: ${widget.longestStreak} days', style: theme.textTheme.bodySmall),
                       ],
                     ),
                   ],
                 ),
               ),
-              Container(width: 0.75, height: 52, color: AppColors.border),
+              Container(width: 0.75, height: 52, color: theme.colorScheme.outline),
               const SizedBox(width: 16),
               // Rank
               Column(
@@ -190,17 +193,17 @@ class _PremiumStreakBannerState extends State<_PremiumStreakBanner>
                   Container(
                     width: 52, height: 52,
                     decoration: BoxDecoration(
-                      gradient: AppColors.goldGradient,
+                      gradient: const LinearGradient(colors: [Color(0xFFFFBE0B), Color(0xFFD4AF37)], begin: Alignment.topLeft, end: Alignment.bottomRight),
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [BoxShadow(color: AppColors.gold.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
+                      boxShadow: [BoxShadow(color: goldColor.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
                     ),
                     child: Center(
                       child: Text('#${widget.rank}',
-                        style: AppFonts.mono.copyWith(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
+                        style: theme.textTheme.labelMedium?.copyWith(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700)),
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text('Global', style: AppFonts.bodySmall),
+                  Text('Global', style: theme.textTheme.bodySmall),
                 ],
               ),
             ],
@@ -248,6 +251,7 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: AppTheme.glassCard(),
@@ -264,11 +268,11 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 12),
           AnimatedCounter(
             value: value,
-            style: AppFonts.display.copyWith(fontSize: 22),
+            style: theme.textTheme.headlineMedium?.copyWith(fontSize: 22),
             suffix: suffix,
           ),
           const SizedBox(height: 4),
-          Text(label, style: AppFonts.bodySmall),
+          Text(label, style: theme.textTheme.bodySmall),
         ],
       ),
     );
@@ -283,13 +287,15 @@ class _WeeklyTracker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.glassCard(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('This Week', style: AppFonts.title),
+          Text('This Week', style: theme.textTheme.titleMedium),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -299,22 +305,22 @@ class _WeeklyTracker extends StatelessWidget {
                   width: 38, height: 38,
                   decoration: BoxDecoration(
                     color: dots[i]
-                        ? AppColors.accent.withValues(alpha: 0.15)
-                        : AppColors.surfaceMid,
+                        ? primary.withValues(alpha: 0.15)
+                        : theme.colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: dots[i]
-                          ? AppColors.accent.withValues(alpha: 0.4)
-                          : AppColors.border,
+                          ? primary.withValues(alpha: 0.4)
+                          : theme.colorScheme.outline,
                       width: 0.75,
                     ),
                   ),
                   child: dots[i]
-                      ? const Icon(Icons.check_rounded, color: AppColors.accent, size: 18)
+                      ? Icon(Icons.check_rounded, color: primary, size: 18)
                       : null,
                 ),
                 const SizedBox(height: 6),
-                Text(_days[i], style: AppFonts.bodySmall.copyWith(fontSize: 11)),
+                Text(_days[i], style: theme.textTheme.bodySmall?.copyWith(fontSize: 11)),
               ],
             )),
           ),
@@ -332,6 +338,8 @@ class _MonthlyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     final maxVal = data.reduce((a, b) => a > b ? a : b);
     return Container(
       padding: const EdgeInsets.all(20),
@@ -339,7 +347,7 @@ class _MonthlyChart extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Monthly Sessions', style: AppFonts.title),
+          Text('Monthly Sessions', style: theme.textTheme.titleMedium),
           const SizedBox(height: 20),
           SizedBox(
             height: 100,
@@ -359,14 +367,14 @@ class _MonthlyChart extends StatelessWidget {
                           height: h,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [AppColors.accent.withValues(alpha: 0.8), AppColors.accent],
+                              colors: [primary.withValues(alpha: 0.8), primary],
                               begin: Alignment.bottomCenter, end: Alignment.topCenter,
                             ),
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(_months[i], style: AppFonts.bodySmall.copyWith(fontSize: 9)),
+                        Text(_months[i], style: theme.textTheme.bodySmall?.copyWith(fontSize: 9)),
                       ],
                     ),
                   ),
@@ -387,6 +395,8 @@ class _PrSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: AppTheme.glassCard(),
@@ -396,8 +406,8 @@ class _PrSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('PR Progress', style: AppFonts.title),
-              Text('${items.length} goals', style: AppFonts.bodySmall),
+              Text('PR Progress', style: theme.textTheme.titleMedium),
+              Text('${items.length} goals', style: theme.textTheme.bodySmall),
             ],
           ),
           const SizedBox(height: 16),
@@ -409,9 +419,9 @@ class _PrSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(item.name, style: AppFonts.body),
+                    Text(item.name, style: theme.textTheme.bodyMedium),
                     Text('${item.current}% / ${item.target}%',
-                      style: AppFonts.mono.copyWith(fontSize: 11, color: AppColors.accent)),
+                      style: theme.textTheme.labelMedium?.copyWith(fontSize: 11, color: primary)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -420,7 +430,7 @@ class _PrSection extends StatelessWidget {
                     Container(
                       height: 6,
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceMid,
+                        color: theme.colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(3),
                       ),
                     ),
@@ -429,10 +439,10 @@ class _PrSection extends StatelessWidget {
                       child: Container(
                         height: 6,
                         decoration: BoxDecoration(
-                          gradient: AppColors.accentGradient,
+                          gradient: LinearGradient(colors: [primary.withValues(alpha: 0.8), primary]),
                           borderRadius: BorderRadius.circular(3),
                           boxShadow: [
-                            BoxShadow(color: AppColors.accent.withValues(alpha: 0.4), blurRadius: 6),
+                            BoxShadow(color: primary.withValues(alpha: 0.4), blurRadius: 6),
                           ],
                         ),
                       ),

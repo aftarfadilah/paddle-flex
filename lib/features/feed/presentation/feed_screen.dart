@@ -18,10 +18,10 @@ final _mockPosts = List.generate(8, (i) {
   final scores    = ['6-4 3-6 7-5', '4-6 6-3 5-7', ''];
   final created   = DateTime.now().subtract(Duration(hours: i * 2 + (i > 4 ? 12 : 0)));
   return FeedPost(
-    id: 'post_$i', userId: 'user_$i', sessionId: 'session_$i',
+    id: 'post_', userId: 'user_', sessionId: 'session_',
     createdAt: created, flexFactor: flexes[i], exerciseCount: 3 + (i % 4),
     session: Session(
-      id: 'session_$i', userId: 'user_$i', date: created,
+      id: 'session_', userId: 'user_', date: created,
       result: results[i % 3], score: scores[i % 3],
       durationMinutes: durations[i],
       likeCount: (i * 7) % 23, commentCount: (i * 3) % 11, createdAt: created,
@@ -53,11 +53,12 @@ class FeedScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final feedAsync = ref.watch(feedProvider);
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: feedAsync.when(
         loading: () => const _LuxuryShimmer(),
-        error: (e, st) => Center(child: Text('Error: $e', style: AppFonts.body)),
+        error: (e, st) => Center(child: Text('Error: ', style: theme.textTheme.bodyMedium)),
         data: (posts) => posts.isEmpty
             ? _EmptyFeed()
             : CustomScrollView(
@@ -73,20 +74,20 @@ class FeedScreen extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Activity', style: AppFonts.display.copyWith(fontSize: 28)),
+                              Text('Activity', style: theme.textTheme.displayLarge?.copyWith(fontSize: 28)),
                               const SizedBox(height: 2),
-                              Text('Recent matches', style: AppFonts.bodySmall),
+                              Text('Recent matches', style: theme.textTheme.bodySmall),
                             ],
                           ),
                           Container(
                             width: 42, height: 42,
                             decoration: BoxDecoration(
-                              color: AppColors.surface,
+                              color: theme.colorScheme.surface,
                               borderRadius: BorderRadius.circular(14),
-                              border: Border.all(color: AppColors.border),
+                              border: Border.all(color: theme.colorScheme.outline),
                             ),
-                            child: const Icon(Icons.notifications_outlined,
-                                color: AppColors.textSecondary, size: 20),
+                            child: Icon(Icons.notifications_outlined,
+                                color: theme.colorScheme.onSurfaceVariant, size: 20),
                           ),
                         ],
                       ),
@@ -133,6 +134,7 @@ class FeedScreen extends ConsumerWidget {
 class _EmptyFeed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -140,17 +142,17 @@ class _EmptyFeed extends StatelessWidget {
           Container(
             width: 80, height: 80,
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: theme.colorScheme.outline),
             ),
-            child: const Icon(Icons.sports_tennis, size: 36, color: AppColors.textTertiary),
+            child: Icon(Icons.sports_tennis, size: 36, color: theme.colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 24),
-          Text('No sessions yet', style: AppFonts.headline),
+          Text('No sessions yet', style: theme.textTheme.headlineMedium),
           const SizedBox(height: 8),
           Text('Log your first match to see it here',
-              style: AppFonts.bodySmall),
+              style: theme.textTheme.bodySmall),
         ],
       ),
     );
@@ -207,13 +209,14 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final session  = widget.post.session;
     final result   = session?.result ?? SessionResult.practice;
     final flexColor = widget.post.flexFactor >= 80
-        ? AppColors.accent
+        ? theme.colorScheme.primary
         : widget.post.flexFactor >= 50
             ? const Color(0xFFFFBE0B)
-            : AppColors.textSecondary;
+            : theme.colorScheme.onSurfaceVariant;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -238,7 +241,7 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
                   ),
                   padding: const EdgeInsets.all(2),
                   child: Container(
-                    decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.surface),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: theme.colorScheme.surface),
                     child: Center(
                       child: Text(widget.name[0],
                         style: TextStyle(
@@ -255,9 +258,9 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.name, style: AppFonts.title),
+                      Text(widget.name, style: theme.textTheme.titleLarge),
                       const SizedBox(height: 2),
-                      Text(_timeAgo(widget.post.createdAt), style: AppFonts.bodySmall),
+                      Text(_timeAgo(widget.post.createdAt), style: theme.textTheme.bodySmall),
                     ],
                   ),
                 ),
@@ -271,7 +274,7 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Text(session!.score,
-                style: AppFonts.mono.copyWith(fontSize: 20, letterSpacing: 2.5, height: 1.2),
+                style: theme.textTheme.labelMedium?.copyWith(fontSize: 20, letterSpacing: 2.5, height: 1.2),
               ),
             ),
 
@@ -282,7 +285,7 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
               children: [
                 _LuxuryChip(
                   icon: Icons.timer_outlined, label: '${session?.durationMinutes ?? 0} min',
-                  color: AppColors.textSecondary,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: 8),
                 _LuxuryChip(
@@ -294,7 +297,7 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
                 _LuxuryChip(
                   icon: Icons.fitness_center,
                   label: '${widget.post.exerciseCount} sets',
-                  color: AppColors.textSecondary,
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ],
             ),
@@ -303,7 +306,7 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
           // Divider
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-            child: Container(height: 0.5, color: AppColors.border),
+            child: Container(height: 0.5, color: theme.colorScheme.outline),
           ),
 
           // Actions
@@ -323,13 +326,13 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
                           child: Icon(
                             _liked ? Icons.favorite : Icons.favorite_border,
                             size: 22,
-                            color: _liked ? Colors.red : AppColors.textSecondary,
+                            color: _liked ? theme.colorScheme.error : theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(width: 7),
                         Text('$_likeCount',
-                          style: AppFonts.mono.copyWith(fontSize: 13,
-                            color: _liked ? Colors.red : AppColors.textSecondary)),
+                          style: theme.textTheme.labelMedium?.copyWith(fontSize: 13,
+                            color: _liked ? theme.colorScheme.error : theme.colorScheme.onSurfaceVariant)),
                       ],
                     ),
                   ),
@@ -340,10 +343,10 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   child: Row(
                     children: [
-                      const Icon(Icons.chat_bubble_outline, size: 20, color: AppColors.textSecondary),
+                      Icon(Icons.chat_bubble_outline, size: 20, color: theme.colorScheme.onSurfaceVariant),
                       const SizedBox(width: 7),
                       Text('${session?.commentCount ?? 0}',
-                        style: AppFonts.mono.copyWith(fontSize: 13, color: AppColors.textSecondary)),
+                        style: theme.textTheme.labelMedium?.copyWith(fontSize: 13, color: theme.colorScheme.onSurfaceVariant)),
                     ],
                   ),
                 ),
@@ -351,7 +354,7 @@ class _LuxuryPostCardState extends State<_LuxuryPostCard>
                 IconButton(
                   icon: const Icon(Icons.share_outlined, size: 20),
                   onPressed: () {},
-                  color: AppColors.textSecondary,
+                  color: theme.colorScheme.onSurfaceVariant,
                   visualDensity: VisualDensity.compact,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
@@ -376,10 +379,10 @@ class _LuxuryResultBadge extends StatelessWidget {
   final SessionResult result;
   const _LuxuryResultBadge({required this.result});
 
-  Color get _color => switch (result) {
-    SessionResult.win => AppColors.accent,
-    SessionResult.loss => AppColors.error,
-    SessionResult.practice => AppColors.textTertiary,
+  Color _color(BuildContext context) => switch (result) {
+    SessionResult.win => Theme.of(context).colorScheme.primary,
+    SessionResult.loss => Theme.of(context).colorScheme.error,
+    SessionResult.practice => Theme.of(context).colorScheme.onSurfaceVariant,
   };
 
   String get _label => switch (result) {
@@ -390,16 +393,17 @@ class _LuxuryResultBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = _color(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: _color.withValues(alpha: 0.2), width: 0.75),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 0.75),
       ),
       child: Text(_label,
         style: TextStyle(
-          color: _color,
+          color: color,
           fontFamily: 'Space Grotesk',
           fontWeight: FontWeight.w700,
           fontSize: 10,

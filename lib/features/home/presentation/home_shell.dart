@@ -49,7 +49,7 @@ class _HomeShellState extends State<HomeShell> with TickerProviderStateMixin {
     final idx = _currentIndex(widget.location);
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: widget.child,
       extendBody: true,
       bottomNavigationBar: _PremiumNavBar(
@@ -80,8 +80,8 @@ class _PremiumNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface.withValues(alpha: 0.82),
-        border: const Border(top: BorderSide(color: AppColors.border, width: 0.5)),
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.82),
+        border: Border(top: BorderSide(color: Theme.of(context).colorScheme.outline, width: 0.5)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
@@ -202,7 +202,7 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                   height: 36,
                   decoration: BoxDecoration(
                     color: widget.isActive
-                        ? AppColors.accent.withValues(alpha: _fade.value * 0.15)
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: _fade.value * 0.15)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -210,8 +210,8 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                     widget.icon,
                     size: 22,
                     color: widget.isActive
-                        ? AppColors.accent
-                        : AppColors.textSecondary,
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
@@ -226,8 +226,8 @@ class _NavItemState extends State<_NavItem> with SingleTickerProviderStateMixin 
                   fontSize: 10,
                   fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
                   color: Color.lerp(
-                    AppColors.textSecondary,
-                    AppColors.accent,
+                    Theme.of(context).colorScheme.onSurfaceVariant,
+                    Theme.of(context).colorScheme.primary,
                     _fade.value,
                   ),
                 ),
@@ -253,16 +253,16 @@ class PremiumFAB extends StatelessWidget {
         width: 56,
         height: 56,
         decoration: BoxDecoration(
-          gradient: AppColors.accentGradient,
+          gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.primary.withValues(alpha:0.8)]),
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: AppColors.accent.withValues(alpha: 0.4),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
             BoxShadow(
-              color: AppColors.accent.withValues(alpha: 0.2),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
               blurRadius: 32,
               offset: const Offset(0, 12),
             ),

@@ -72,10 +72,10 @@ class _BoardScreenState extends ConsumerState<BoardScreen>
   Widget build(BuildContext context) {
     final lbAsync = ref.watch(_leaderboardProvider);
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: lbAsync.when(
         loading: () => const _BoardShimmer(),
-        error: (e, st) => Center(child: Text('Error: $e', style: AppFonts.body)),
+        error: (e, st) => Center(child: Text('Error: \$e', style: Theme.of(context).textTheme.bodyMedium)),
         data: (data) => NestedScrollView(
           physics: const BouncingScrollPhysics(),
           headerSliverBuilder: (_, __) => [
@@ -85,9 +85,9 @@ class _BoardScreenState extends ConsumerState<BoardScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Leaderboard', style: AppFonts.display.copyWith(fontSize: 28)),
+                    Text('Leaderboard', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 28)),
                     const SizedBox(height: 4),
-                    Text('Top athletes this season', style: AppFonts.bodySmall),
+                    Text('Top athletes this season', style: Theme.of(context).textTheme.bodySmall),
                     const SizedBox(height: 24),
                     _PremiumPodium(top3: data.overall.take(3).toList()),
                     const SizedBox(height: 24),
@@ -179,8 +179,8 @@ class _PodiumPlace extends StatelessWidget {
   final double height;
   const _PodiumPlace({required this.entry, required this.height});
 
-  Color get _medalColor => switch (entry.rank) {
-    1 => AppColors.gold,
+  Color _medalColor(BuildContext context) => switch (entry.rank) {
+    1 => const Color(0xFFD4AF37),
     2 => const Color(0xFFC0C0C0),
     _ => const Color(0xFFCD7F32),
   };
@@ -193,6 +193,7 @@ class _PodiumPlace extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final medalColor = _medalColor(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -202,11 +203,11 @@ class _PodiumPlace extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(colors: entry.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
-            boxShadow: [BoxShadow(color: _medalColor.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
+            boxShadow: [BoxShadow(color: medalColor.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
           ),
           padding: const EdgeInsets.all(2),
           child: Container(
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.surface),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).colorScheme.surface),
             child: Center(
               child: Text(entry.name[0],
                 style: TextStyle(
@@ -219,9 +220,9 @@ class _PodiumPlace extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(entry.name.split(' ').first, style: AppFonts.title.copyWith(fontSize: 12)),
-        Text('${entry.score}%', style: AppFonts.mono.copyWith(
-          color: _medalColor, fontSize: 14, fontWeight: FontWeight.w700)),
+        Text(entry.name.split(' ').first, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 12)),
+        Text('\${entry.score}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+          color: medalColor, fontSize: 14, fontWeight: FontWeight.w700)),
         const SizedBox(height: 8),
         // Podium block
         Container(
@@ -229,19 +230,19 @@ class _PodiumPlace extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [_medalColor.withValues(alpha: 0.2), _medalColor.withValues(alpha: 0.05)],
+              colors: [medalColor.withValues(alpha: 0.2), medalColor.withValues(alpha: 0.05)],
               begin: Alignment.topCenter, end: Alignment.bottomCenter,
             ),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-            border: Border.all(color: _medalColor.withValues(alpha: 0.25), width: 0.75),
+            border: Border.all(color: medalColor.withValues(alpha: 0.25), width: 0.75),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(_medalIcon, color: _medalColor, size: 28),
+              Icon(_medalIcon, color: medalColor, size: 28),
               const SizedBox(height: 4),
-              Text('#${entry.rank}', style: AppFonts.mono.copyWith(
-                color: _medalColor, fontSize: 12, fontWeight: FontWeight.w700)),
+              Text('#\${entry.rank}', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: medalColor, fontSize: 12, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
@@ -257,22 +258,22 @@ class _PremiumTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border, width: 0.75),
+        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 0.75),
       ),
       child: TabBar(
         controller: tabCtrl,
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         indicator: BoxDecoration(
-          color: AppColors.accent.withValues(alpha: 0.12),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(10),
         ),
-        labelColor: AppColors.accent,
-        unselectedLabelColor: AppColors.textSecondary,
-        labelStyle: AppFonts.title.copyWith(fontSize: 13, fontWeight: FontWeight.w600),
-        unselectedLabelStyle: AppFonts.title.copyWith(fontSize: 13, fontWeight: FontWeight.w500),
+        labelColor: Theme.of(context).colorScheme.primary,
+        unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        labelStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.w600),
+        unselectedLabelStyle: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.w500),
         tabs: const [
           Tab(text: 'Overall'),
           Tab(text: 'Exercises'),
@@ -304,15 +305,16 @@ class _PlayerRow extends StatelessWidget {
   final _PlayerEntry entry;
   const _PlayerRow({required this.entry});
 
-  Color get _rankColor => switch (entry.rank) {
-    1 => AppColors.gold,
+  Color _rankColor(BuildContext context) => switch (entry.rank) {
+    1 => const Color(0xFFD4AF37),
     2 => const Color(0xFFC0C0C0),
     3 => const Color(0xFFCD7F32),
-    _ => AppColors.textTertiary,
+    _ => Theme.of(context).colorScheme.onSurfaceVariant,
   };
 
   @override
   Widget build(BuildContext context) {
+    final rankColor = _rankColor(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -321,8 +323,8 @@ class _PlayerRow extends StatelessWidget {
         children: [
           SizedBox(
             width: 28,
-            child: Text('#${entry.rank}',
-              style: AppFonts.mono.copyWith(fontSize: 12, color: _rankColor, fontWeight: FontWeight.w700)),
+            child: Text('#\${entry.rank}',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(fontSize: 12, color: rankColor, fontWeight: FontWeight.w700)),
           ),
           const SizedBox(width: 12),
           Container(
@@ -333,7 +335,7 @@ class _PlayerRow extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(2),
             child: Container(
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.surface),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).colorScheme.surface),
               child: Center(child: Text(entry.name[0],
                 style: TextStyle(color: entry.gradient[0], fontWeight: FontWeight.bold, fontSize: 15))),
             ),
@@ -343,18 +345,18 @@ class _PlayerRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(entry.name, style: AppFonts.title),
+                Text(entry.name, style: Theme.of(context).textTheme.titleMedium),
                 if (entry.club.isNotEmpty)
-                  Text(entry.club, style: AppFonts.bodySmall.copyWith(fontSize: 11)),
+                  Text(entry.club, style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('${entry.score}%', style: AppFonts.mono.copyWith(
-                color: entry.rank <= 3 ? _rankColor : AppColors.textPrimary, fontSize: 14)),
-              Text('${entry.sessions}s', style: AppFonts.bodySmall.copyWith(fontSize: 10)),
+              Text('\${entry.score}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: entry.rank <= 3 ? rankColor : Theme.of(context).colorScheme.onSurface, fontSize: 14)),
+              Text('\${entry.sessions}s', style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10)),
             ],
           ),
         ],
@@ -383,24 +385,24 @@ class _ExerciseList extends StatelessWidget {
               Container(
                 width: 44, height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.accent.withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
                 ),
-                child: Icon(entries[i].icon, color: AppColors.accent, size: 22),
+                child: Icon(entries[i].icon, color: Theme.of(context).colorScheme.primary, size: 22),
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(entries[i].name, style: AppFonts.title),
-                    Text('${entries[i].sessions} sessions', style: AppFonts.bodySmall),
+                    Text(entries[i].name, style: Theme.of(context).textTheme.titleMedium),
+                    Text('\${entries[i].sessions} sessions', style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ),
-              Text('${entries[i].best}%', style: AppFonts.mono.copyWith(
-                color: AppColors.accent, fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('\${entries[i].best}%', style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.primary, fontSize: 16, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
